@@ -14,6 +14,7 @@
 #' @param crit123_details Logical, if set to \code{TRUE} this function returns information about which of the three criteria (e.g. "sg_crit1_2to3", "sg_crit2_2to3", and "sg_crit3_2to3") are met for each session to session interval for all cases.
 #' Variables named "sg_2to3", "sg_3to4" summarise all criteria that were selected to identify sudden gains.
 #' @return A wide data set indicating whether sudden losses are present for each session to session interval for all cases in \code{data}.
+#' @references Tang, T. Z., & DeRubeis, R. J. (1999). Sudden gains and critical sessions in cognitive-behavioral therapy for depression. Journal of Consulting and Clinical Psychology, 67(6), 894–904. \url{https://doi.org/10.1037/0022-006X.67.6.894}.
 #' @examples # Identify sudden losses
 #' identify_sl(data = sgdata,
 #'             # Negative cut-off value to identify sudden losses
@@ -30,6 +31,12 @@ identify_sl <- function(data, id_var_name, sg_var_list, sg_crit1_cutoff, sg_crit
     if (base::is.null(sg_crit1_cutoff) == TRUE & base::is.null(sg_crit2_pct) == TRUE & sg_crit3 == FALSE) {
         stop("Please specify at least one of the three sudden gains criteria using the following arguments: sg_crit1_cutoff, sg_crit2_pct, sg_crit3.", call. = FALSE)
     }
+
+    if (sg_crit1_cutoff > 0) {
+        stop("The cut-off value specified in 'sg_crit1_cutoff' needs to be negative to identify sudden losses.", call. = FALSE)
+    }
+
+
 
         # Select data for identifying sudden losses
         # Only ID variable and sudden losses variables needed
@@ -163,7 +170,7 @@ identify_sl <- function(data, id_var_name, sg_var_list, sg_crit1_cutoff, sg_crit
 
             # If identify_sg_1to2 is FALSE, sg variables will start with "sg_2to3"
         } else if (identify_sg_1to2 == TRUE) {
-            base::message("The argument identify_sg_1to2 is set to TRUE.\nThis implies that the first variable specified in the argument 'sg_var_list' represents a baseline measurement point, e.g. pre-intervention assessment.")
+            # base::message("The argument identify_sg_1to2 is set to TRUE, this implies that the first variable specified in the argument 'sg_var_list' represents a baseline measurement point, e.g. pre-intervention assessment.")
             for (i in 1:(base::ncol(data_loop) - 3)) {
                 sg_col_names[i] <- base::paste0("sl_", i, "to", i + 1)
 
@@ -180,6 +187,15 @@ identify_sl <- function(data, id_var_name, sg_var_list, sg_crit1_cutoff, sg_crit
         names(crit1) <- sg_col_names_crit1
         names(crit2) <- sg_col_names_crit2
         names(crit3) <- sg_col_names_crit3
+
+        # Calculate number of sudden losses
+        sg_sum <- base::sum(crit123, na.rm = T)
+
+        # Return message if no sudden losses were identified
+        # Have this down here so it's the last message and more visible
+        if (sg_sum == 0) {
+            base::warning("No sudden losses were identified.", call. = FALSE)
+        }
 
         # Export dataframe with information whether individual criteria were met
         if (crit123_details == TRUE) {

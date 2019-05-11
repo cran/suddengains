@@ -2,7 +2,7 @@
 % Please edit documentation in R/select_cases.R
 \name{select_cases}
 \alias{select_cases}
-\title{Select sample with enough available data to identify sudden gains}
+\title{Select sample providing enough data to identify sudden gains}
 \usage{
 select_cases(data, id_var_name, sg_var_list, method = c("pattern",
   "min_sess"), min_sess_num = NULL, return_id_lgl = FALSE)
@@ -16,17 +16,28 @@ select_cases(data, id_var_name, sg_var_list, method = c("pattern",
 
 \item{method}{String, specifying the method used to select cases: \code{pattern} or \code{min_sess}.}
 
-\item{min_sess_num}{Numberic, minimum number of available sessions to be selected.
+\item{min_sess_num}{Numeric, minimum number of available sessions to be selected.
 This argument needs to be specified if \code{method = min_sess}.}
 
-\item{return_id_lgl}{Logical, if \code{TRUE} the function returns only the ID variable a new variable \code{sg_select} indicating whether there is enough data available to identify sudden gains.
-If set to \code{FALSE}}
+\item{return_id_lgl}{Logical, if \code{TRUE} the function returns the ID variable and a new variable \code{sg_select} indicating whether there is enough data available to identify sudden gains.
+If set to \code{FALSE} this function retruns the input data together with the new variable \code{sg_select}.}
 }
 \value{
-A wide dataset or just the id variable containing a new variable \code{sg_select} indicating whether there is enough data available to identify sudden gains.
+A wide dataset indicating with all cases and a variable indicating whether each cases provides enough data to identify sudden gains.
 }
 \description{
-Select sample with enough available data to identify sudden gains
+Select sample for further sudden gains analyses depending on specified methods.
+
+The following table shows the different data patterns that get selected when \code{method = "pattern"}.
+This function goes through the data and selects all cases with at least one of the following data patterns.
+\tabular{lrrrrrr}{
+\strong{Pattern} \tab \strong{x1} \tab \strong{x2} \tab \strong{x3} \tab \strong{x4} \tab \strong{x5} \tab \strong{x6} \cr
+\strong{1.}       \tab x           \tab \strong{N}  \tab x           \tab x           \tab .         \tab .           \cr
+\strong{2.}       \tab x           \tab \strong{N}  \tab x           \tab .          \tab x          \tab .           \cr
+\strong{3.}       \tab x           \tab .          \tab \strong{N}  \tab x           \tab x          \tab .           \cr
+\strong{4.}       \tab x           \tab .          \tab \strong{N}  \tab x           \tab .          \tab x
+}
+\emph{Note}. x1 to x6 are consecutive data points of the primary outcome measure. 'x' = Available data; '.' = Missing data. '\strong{N}' represents available data to be examined as a possible pregain session.
 }
 \examples{
 # 1. method = "pattern"

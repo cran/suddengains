@@ -80,7 +80,7 @@ define_crit1_cutoff(data_sessions = sgdata,
                     data_item = NULL,
                     tx_start_var_name = "bdi_s0",
                     tx_end_var_name = "bdi_s12",
-                    reliability = 0.931)
+                    reliability = 0.91)
 
 
 ## ---- eval = FALSE-------------------------------------------------------
@@ -93,7 +93,6 @@ define_crit1_cutoff(data_sessions = sgdata,
 #                              "bdi_s5", "bdi_s6", "bdi_s7", "bdi_s8",
 #                              "bdi_s9", "bdi_s10", "bdi_s11", "bdi_s12"),
 #              identify_sg_1to2 = FALSE)
-#  
 
 ## ---- eval = FALSE-------------------------------------------------------
 #  identify_sg(data = sgdata,
@@ -106,7 +105,6 @@ define_crit1_cutoff(data_sessions = sgdata,
 #                              "bdi_s9", "bdi_s10", "bdi_s11", "bdi_s12"),
 #              identify_sg_1to2 = FALSE,
 #              crit123_details = TRUE)
-#  
 
 ## ---- eval = FALSE-------------------------------------------------------
 #  identify_sg(data = sgdata,
@@ -299,26 +297,28 @@ datatable(bysg_rq,
               fixedColumns = TRUE))
 
 ## ------------------------------------------------------------------------
-# Create plot of average change in depression symptoms around the gain
+# Create plot of average change in depression symptoms (BDI) around the gain
 plot_sg_bdi <- plot_sg(data = bysg,
+                       id_var_name = "id",
                        tx_start_var_name = "bdi_s1",
                        tx_end_var_name = "bdi_s12",
                        sg_pre_post_var_list = c("sg_bdi_2n", "sg_bdi_1n", "sg_bdi_n",
                                                 "sg_bdi_n1", "sg_bdi_n2", "sg_bdi_n3"),
                        ylab = "BDI", xlab = "Session",
-                       colour = "#239b89ff")
+                       colour_single = "#239b89ff")
 
-# Create plot of average change in rumination around the gain
+# Create plot of average change in rumination (RQ) around depression sudden gains
 plot_sg_rq <- plot_sg(data = bysg_rq,
-                       tx_start_var_name = "rq_s1",
-                       tx_end_var_name = "rq_s12",
-                       sg_pre_post_var_list = c("sg_rq_2n", "sg_rq_1n", "sg_rq_n",
-                                                "sg_rq_n1", "sg_rq_n2", "sg_rq_n3"),
-                       ylab = "RQ", xlab = "Session",
-                       colour = "#440154FF") 
+                      id_var_name = "id",
+                      tx_start_var_name = "rq_s1",
+                      tx_end_var_name = "rq_s12",
+                      sg_pre_post_var_list = c("sg_rq_2n", "sg_rq_1n", "sg_rq_n",
+                                               "sg_rq_n1", "sg_rq_n2", "sg_rq_n3"),
+                      ylab = "RQ", xlab = "Session",
+                      colour_single = "#440154FF") 
 
 
-# It is possible apply other ggplot2 functions to the plot now,
+# It is then possible to apply other ggplot2 functions to the plot if desired,
 # e.g. y axis scale, or x axis labels ...
 
 plot_sg_bdi <- plot_sg_bdi + 
@@ -328,9 +328,146 @@ plot_sg_rq <- plot_sg_rq +
               ggplot2::scale_x_discrete(labels = c("First", "n-2", "n-1", "n",
                                                    "n+1", "n+2", "n+3", "Last"))
 
-## ---- fig.show = 'hold'--------------------------------------------------
+## ---- fig.show = 'hold', fig.width=3.2, fig.height=3.2-------------------
 plot_sg_bdi
 plot_sg_rq 
+
+## ------------------------------------------------------------------------
+# Set seed
+set.seed(123)
+
+# Duplicate data
+sgdata_group <- rbind(sgdata, sgdata)
+
+# Overwrite id variable
+sgdata_group$id <- c(1:86)
+
+# Add random group variable
+sgdata_group$group <- sample(seq(from = 1, to = 2, by = 1), size = 86, replace = TRUE)
+
+# Create byperson data set
+byperson_group <- create_byperson(data = sgdata_group,
+                                  sg_crit1_cutoff = 7,
+                                  id_var_name = "id",
+                                  tx_start_var_name = "bdi_s1",
+                                  tx_end_var_name = "bdi_s12",
+                                  sg_var_list = c("bdi_s1", "bdi_s2", "bdi_s3",
+                                                  "bdi_s4", "bdi_s5", "bdi_s6",
+                                                  "bdi_s7", "bdi_s8", "bdi_s9",
+                                                  "bdi_s10", "bdi_s11", "bdi_s12"),
+                                  sg_measure_name = "bdi",
+                                  multiple_sg_select = "first")
+
+byperson_group_select <- select_cases(data = byperson_group,
+                              id_var_name = "id",
+                              sg_var_list = c("bdi_s1", "bdi_s2", "bdi_s3", "bdi_s4", 
+                                              "bdi_s5", "bdi_s6", "bdi_s7", "bdi_s8", 
+                                             "bdi_s9", "bdi_s10", "bdi_s11", "bdi_s12"),
+                              method = "pattern",
+                              return_id_lgl = FALSE) %>% 
+                 dplyr::filter(sg_select == TRUE)
+
+## ------------------------------------------------------------------------
+plot_byperson_group <- plot_sg(data = byperson_group_select,
+                               id_var_name = "id",
+                               tx_start_var_name = "bdi_s1",
+                               tx_end_var_name = "bdi_s12",
+                               sg_pre_post_var_list = c("sg_bdi_2n", "sg_bdi_1n", "sg_bdi_n",
+                                                        "sg_bdi_n1", "sg_bdi_n2", "sg_bdi_n3"),
+                               group_var_name = "group",
+                               group_levels = c(1, 2),
+                               group_labels = c("Treatment A", "Treatment B"),
+                               group_title = NULL,
+                               colour_group = "viridis",
+                               viridis_option = "B",
+                               viridis_begin = .2,
+                               viridis_end = .8,
+                               apaish = TRUE,
+                               ylab = "BDI", xlab = "Session")
+
+## ---- fig.show = 'hold', fig.width=5.5, fig.height=4---------------------
+plot_byperson_group
+
+## ------------------------------------------------------------------------
+plot_trajectories_1 <- sgdata %>%
+    plot_sg_trajectories(id_var = "id",
+                         select_id_list = c("2", "4", "5", "9"),
+                         var_list = c("bdi_s1", "bdi_s2", "bdi_s3", "bdi_s4", 
+                                      "bdi_s5", "bdi_s6", "bdi_s7", "bdi_s8", 
+                                      "bdi_s9", "bdi_s10", "bdi_s11", "bdi_s12"),
+                         show_id = TRUE,
+                         id_label_size = 4,
+                         label.padding = .2,
+                         show_legend = FALSE,
+                         colour = "viridis",
+                         viridis_option = "D",
+                         viridis_begin = 0,
+                         viridis_end = .8,
+                         connect_missing = FALSE,
+                         scale_x_num = TRUE,
+                         scale_x_num_start = 1,
+                         apaish = TRUE,
+                         xlab = "Session", 
+                         ylab = "BDI")
+
+## ---- fig.show = 'hold', fig.width=5.5, fig.height=4---------------------
+plot_trajectories_1
+
+## ------------------------------------------------------------------------
+# 1. Create plot including all cases with a sudden gain at session 3
+plot_trajectories_2 <- bysg %>%
+    dplyr::filter(sg_session_n == 3) %>% 
+    plot_sg_trajectories(id_var = "id_sg",
+                         var_list = c("bdi_s1", "bdi_s2", "bdi_s3", "bdi_s4", 
+                                      "bdi_s5", "bdi_s6", "bdi_s7", "bdi_s8", 
+                                      "bdi_s9", "bdi_s10", "bdi_s11", "bdi_s12"),
+                         show_id = FALSE,
+                         id_label_size = 4,
+                         label.padding = .2,
+                         show_legend = TRUE,
+                         colour = "viridis",
+                         viridis_option = "D",
+                         viridis_begin = 0,
+                         viridis_end = .8,
+                         connect_missing = TRUE,
+                         scale_x_num = TRUE,
+                         scale_x_num_start = 1,
+                         apaish = TRUE,
+                         xlab = "Session", 
+                         ylab = "BDI")
+
+## ---- fig.show = 'hold', fig.width=5.5, fig.height=4---------------------
+# 1. Show all cases with a sudden gain at session 3
+plot_trajectories_2
+
+## ------------------------------------------------------------------------
+# 2. Create plot including 3 randomly selected (select_n = 3) cases who experienced 
+#    more than 1 gain (dplyr::filter(sg_freq_byperson > 1))
+plot_trajectories_3 <- byperson_first %>%
+    dplyr::filter(sg_freq_byperson > 1) %>% 
+    plot_sg_trajectories(id_var = "id_sg",
+                         var_list = c("bdi_s1", "bdi_s2", "bdi_s3", "bdi_s4", 
+                                      "bdi_s5", "bdi_s6", "bdi_s7", "bdi_s8", 
+                                      "bdi_s9", "bdi_s10", "bdi_s11", "bdi_s12"),
+                         select_n = 3,
+                         show_id = FALSE,
+                         id_label_size = 4,
+                         label.padding = .2,
+                         show_legend = TRUE,
+                         colour = "viridis",
+                         viridis_option = "D",
+                         viridis_begin = 0,
+                         viridis_end = .8,
+                         connect_missing = TRUE,
+                         scale_x_num = TRUE,
+                         scale_x_num_start = 1,
+                         apaish = TRUE,
+                         xlab = "Session", 
+                         ylab = "BDI")
+
+## ---- fig.show = 'hold', fig.width=5.5, fig.height=4---------------------
+# 2. Show 3 cases (select_n = 3) with more than 1 gain (dplyr::filter(sg_freq_byperson > 1))
+plot_trajectories_3
 
 ## ------------------------------------------------------------------------
 count_intervals(data = sgdata_select,
