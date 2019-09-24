@@ -1,13 +1,13 @@
-8488848e9031bd28f5c4b4c13f27f894 *DESCRIPTION
+12246f289829070c8bd02fb7ce8d7694 *DESCRIPTION
 6c1de4f16864e7b1fb45a17936f7bb0e *NAMESPACE
-70df711e088451840b0b3e4ed3b1a977 *NEWS.md
+aeda2dbf6b1a5fe416fce2479a6387b2 *NEWS.md
 30615a928c5eaa2282386e2351fad021 *R/check_interval.R
 08eb33cfabe439bf2a96a423785fec6e *R/count_intervals.R
 1bacfcc26c711f4e06e686c7678913b6 *R/create_byperson.R
-31937e9976c5454e848cf04a1111cbaa *R/create_bysg.R
-753b93339848dc9e816dd5da5e2d5399 *R/define_crit1_cutoff.R
+fdeb064b08f3cefb9473a9bace71ab0d *R/create_bysg.R
+09ac8aa22ac3adf91c1016aaee709a57 *R/define_crit1_cutoff.R
 71a41ca156124a8fbd26d19e536307f8 *R/describe_sg.R
-7b4a5ff02230db10e0a4bd43562f6e18 *R/extract_values.R
+b9b955c94c6966bbed27983d14d8dfdc *R/extract_values.R
 8543fb5117df7304d5407a695040309e *R/identify_sg.R
 cbe16d853e7a9057422877d6cf018b65 *R/identify_sl.R
 f583f5b5856f7cb5f2c5fbb04f39f8a8 *R/magrittrpipeoperator.R
@@ -27,7 +27,7 @@ e7fbd605c5fc876cbbbae9d19ac3f6cd *build/vignette.rds
 a9ad9b273740c61f9e96fa0ff878ba3b *inst/CITATION
 7e13dfc80d2162e0699dd19192dbc9af *inst/doc/suddengains-tutorial.R
 4057aa6fc77ad0b41c58ade4d6dec97e *inst/doc/suddengains-tutorial.Rmd
-7597fc1d5a25b78592fe96b7e3bf1d70 *inst/doc/suddengains-tutorial.html
+2f9373fb160f5ed8031524fdbfea5571 *inst/doc/suddengains-tutorial.html
 d06ce4294566de9f63e741baca2de496 *man/check_interval.Rd
 8ab622c2774dd46d68838ca0feb7182a *man/count_intervals.Rd
 730b9c8c150552621b33c501ac2baabf *man/create_byperson.Rd
