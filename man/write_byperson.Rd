@@ -7,15 +7,16 @@
 write_byperson(data, sg_crit1_cutoff, id_var_name, sg_var_list,
   tx_start_var_name, tx_end_var_name, sg_measure_name,
   sg_crit2_pct = 0.25, sg_crit3 = TRUE, sg_crit3_alpha = 0.05,
-  identify = c("sg", "sl"), identify_sg_1to2 = FALSE,
-  multiple_sg_select = c("first", "last", "smalles", "largest"),
-  data_is_bysg = FALSE, format = c("CSV", "SPSS", "STATA", "Excel"),
-  path, stata_version = 14, ...)
+  sg_crit3_adjust = TRUE, identify = c("sg", "sl"),
+  identify_sg_1to2 = FALSE, multiple_sg_select = c("first", "last",
+  "smalles", "largest"), data_is_bysg = FALSE, format = c("CSV",
+  "SPSS", "STATA", "Excel"), path, stata_version = 14, ...)
 }
 \arguments{
 \item{data}{A data set in wide format including an ID variable and variables for each measurement point.}
 
 \item{sg_crit1_cutoff}{Numeric, specifying the cut-off value to be used for the first sudden gains criterion.
+The function \code{\link{define_crit1_cutoff}} can be used to calcualate a cutoff value based on the Reliable Change Index (RCI; Jacobson & Truax, 1991).
 If set to \code{NULL} the first criterion wont be applied.}
 
 \item{id_var_name}{String, specifying the name of the ID variable. Each row should have a unique value.}
@@ -37,14 +38,22 @@ If set to \code{FALSE} the third criterion wont be applied.}
 \item{sg_crit3_alpha}{Numeric, alpha for the student t-test (two-tailed) to determine the critical value to be used for the third criterion.
 Degrees of freedom are based on the number of available data in the three sessions preceding the gain and the three sessions following the gain.}
 
-\item{identify}{String, specifying whether to identify sudden gains (\code{"sg"}) or sudden losses (\code{"sl"}).}
+\item{sg_crit3_adjust}{Logical, specify whether critical value gets adjusted for missingness, see Lutz et al. (2013) and the documentation of this R package for further details.
+This argument is set to \code{TRUE} by default adjusting the critical value for missingness as described in the package documentation and Lutz et al. (2013):
+A critical value of 2.776 is used when all three data points before and after a potential gain are available,
+where one datapoint is missing either before or after a potential gain a critical value of 3.182 is used,
+and where one datapoint is missing both before and after the gain a critical value of 4.303 is used (for sg_crit3_alpha = 0.05).
+If set to \code{FALSE} a critical value of 2.776 will instead be used for all comparisons, regardless of missingnes in the sequence of data points that are investigated for potential sudden gains.}
+
+\item{identify}{String, specifying whether to identify sudden gains (\code{"sg"}) using \code{\link{identify_sg}} or sudden losses (\code{"sl"}) using \code{\link{identify_sl}}.
+The default is to identify sudden gains (\code{"sg"}).}
 
 \item{identify_sg_1to2}{Logical, indicating whether to identify sudden losses from measurement point 1 to 2.}
 
 \item{multiple_sg_select}{String, specifying which sudden gain/loss to select for this data set if more than one gain/loss was identified per case.
-Options are: \code{"first"}, \code{"last"}, \code{"smallest"}, or \code{"largest"}.}
+Options are: \code{"first"}, \code{"last"}, \code{"smallest"}, or \code{"largest"}, \code{\link{create_byperson}}.}
 
-\item{data_is_bysg}{Logical, specifying whether the data set in the \code{data} argument is a bysg data set created using the \code{create_bysg} function.}
+\item{data_is_bysg}{Logical, specifying whether the data set in the \code{data} argument is a bysg data set created using the \code{\link{create_bysg}} function.}
 
 \item{format}{String, specifying the format of the data file, \code{"CSV"}, \code{"SPSS"}, \code{"STATA"} or \code{"Excel"}.}
 
@@ -54,7 +63,7 @@ Options are: \code{"first"}, \code{"last"}, \code{"smallest"}, or \code{"largest
 \item{stata_version}{Numeric, specifying STATA version number.}
 
 \item{...}{Additional parameters to be passed on to the specified write function,
-see \code{readr::write_csv} for \code{"CSV"}, \code{haven::write_sav} for \code{"SPSS"}, \code{haven::write_dta} for \code{"STATA"} or \code{writexl::write_xlsx} for \code{"Excel"}
+see \code{\link[readr]{write_csv}} for \code{"CSV"}, \code{\link[haven]{write_sav}} for \code{"SPSS"}, \code{\link[haven]{write_dta}} for \code{"STATA"} or \code{\link[writexl]{write_xlsx}} for \code{"Excel"}
 for more information.}
 }
 \description{

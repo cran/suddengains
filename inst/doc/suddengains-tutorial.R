@@ -15,7 +15,7 @@ library(DT)
 ## ------------------------------------------------------------------------
 citation("suddengains")
 
-## ----data-bdi, echo = FALSE----------------------------------------------
+## ----data-bdi, echo = FALSE, screenshot.force = FALSE--------------------
 
 sgdata_bdi <- sgdata %>% 
     dplyr::select(id, 
@@ -30,7 +30,7 @@ DT::datatable(sgdata_bdi,
                              scrollX = TRUE,
                              fixedColumns = TRUE))
 
-## ----data-rq, echo = FALSE-----------------------------------------------
+## ----data-rq, echo = FALSE, screenshot.force = FALSE---------------------
 
 sgdata_rq <- sgdata %>% 
     dplyr::select(id, 
@@ -74,14 +74,16 @@ sgdata_select <- select_cases(data = sgdata,
                               return_id_lgl = FALSE) %>% 
                  dplyr::filter(sg_select == TRUE)
 
-## ------------------------------------------------------------------------
-# Test define_crit1_cutoff function ----
-define_crit1_cutoff(data_sessions = sgdata,
-                    data_item = NULL,
-                    tx_start_var_name = "bdi_s0",
-                    tx_end_var_name = "bdi_s12",
-                    reliability = 0.91)
-
+## ---- eval=FALSE---------------------------------------------------------
+#  # Define cut-off value for first SG criterion
+#  # The sd and the reliability are specified manually
+#  define_crit1_cutoff(sd = 10.5,
+#                      reliability = 0.931)
+#  
+#  # The reliability is specified manually
+#  # The sd gets calculated from variable "bdi_s0" in "sgdata"
+#  define_crit1_cutoff(data_sd = sgdata$bdi_s0,
+#                      reliability = 0.931)
 
 ## ---- eval = FALSE-------------------------------------------------------
 #  identify_sg(data = sgdata,
@@ -249,7 +251,7 @@ bysg <- create_bysg(data = sgdata,
                     sg_measure_name = "bdi",
                     identify = "sg")
 
-## ---- echo = FALSE-------------------------------------------------------
+## ---- echo = FALSE, screenshot.force = FALSE-----------------------------
 DT::datatable(bysg,
               rownames = FALSE,
               extensions = 'FixedColumns',
@@ -270,7 +272,7 @@ bysl <- create_bysg(data = sgdata,
                     sg_measure_name = "bdi",
                     identify = "sl")
 
-## ---- echo = FALSE-------------------------------------------------------
+## ---- echo = FALSE, screenshot.force = FALSE-----------------------------
 DT::datatable(bysl,
               rownames = FALSE,
               extensions = 'FixedColumns',
@@ -314,7 +316,7 @@ byperson_largest <- create_byperson(data = sgdata,
                                     identify_sg_1to2 = FALSE,
                                     multiple_sg_select = "largest")
 
-## ---- echo = FALSE-------------------------------------------------------
+## ---- echo = FALSE, screenshot.force = FALSE-----------------------------
 DT::datatable(byperson_largest,
           rownames = FALSE,
           extensions = 'FixedColumns',
