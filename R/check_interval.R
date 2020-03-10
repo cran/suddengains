@@ -5,7 +5,7 @@
 #' @param pre_values Vector, three pre gain/loss values to be checked for a sudden gain/loss (n-2, n-1, n)
 #' @param post_values Vector, three post gain/loss values to be checked for a sudden gain/loss (n+1, n+2, n+3)
 #' @param sg_crit1_cutoff Numeric, specifying the cut-off value to be used for the first sudden gains criterion.
-#' The function \code{\link{define_crit1_cutoff}} can be used to calcualate a cutoff value based on the Reliable Change Index (RCI; Jacobson & Truax, 1991).
+#' The function \code{\link{define_crit1_cutoff}} can be used to calculate a cutoff value based on the Reliable Change Index (RCI; Jacobson & Truax, 1991).
 #' If set to \code{NULL} the first criterion wont be applied.
 #' @param sg_crit2_pct Numeric, specifying the percentage change to be used for the second sudden gains/losses criterion.
 #' If set to \code{NULL} the second criterion wont be applied.
@@ -19,6 +19,7 @@
 #' where one datapoint is missing either before or after a potential gain a critical value of 3.182 is used,
 #' and where one datapoint is missing both before and after the gain a critical value of 4.303 is used.
 #' If set to \code{FALSE} a critical value of 2.776 will instead be used for all comparisons, regardless of missingnes in the sequence of data points that are investigated for sudden gains.
+#' @param sg_crit3_critical_value Numeric, specifying the critical value to instead be used for all comparisons, regardless of missingnes in the sequence of data points that are investigated for potential sudden gains.
 #' @param identify String, specifying whether to identify sudden gains (\code{"sg"}) or sudden losses (\code{"sl"}).
 #' @param details Logical, details yes no?
 #'
@@ -66,7 +67,7 @@
 #'                sg_crit3_alpha = .05,
 #'                identify = "sl")
 #'
-check_interval <- function(pre_values, post_values, sg_crit1_cutoff, sg_crit2_pct = .25, sg_crit3 = TRUE, sg_crit3_alpha = .05, sg_crit3_adjust = TRUE, identify = c("sg", "sl"), details = TRUE) {
+check_interval <- function(pre_values, post_values, sg_crit1_cutoff, sg_crit2_pct = .25, sg_crit3 = TRUE, sg_crit3_alpha = .05, sg_crit3_adjust = TRUE, sg_crit3_critical_value = 2.776, identify = c("sg", "sl"), details = TRUE) {
 
     # Check arguments
     identify <- base::match.arg(identify)
@@ -107,7 +108,7 @@ check_interval <- function(pre_values, post_values, sg_crit1_cutoff, sg_crit2_pc
 
         # Check 3rd sudden gains criterion ----
         if (sg_crit3 == FALSE) {
-            sg_crit3_critical_value <- NA
+            sg_crit3_critical_value_set <- NA
             crit3 <- NA
         } else {
             # Define pre and post mean, sdn and number of available data points for 3rd criterion
@@ -125,17 +126,17 @@ check_interval <- function(pre_values, post_values, sg_crit1_cutoff, sg_crit2_pc
             if (sum_n_pre >= 2 & sum_n_post >= 2) {
                 # Calculate critical value to be used based on how many pre and postgain sessions are available
                 if (sg_crit3_adjust == TRUE) {
-                sg_crit3_critical_value <- base::abs(stats::qt(p = (sg_crit3_alpha / 2), df = (sum_n_pre_post - 2)))
+                sg_crit3_critical_value_set <- base::abs(stats::qt(p = (sg_crit3_alpha / 2), df = (sum_n_pre_post - 2)))
                 } else if  (sg_crit3_adjust == FALSE) {
-                    sg_crit3_critical_value <- 2.776
+                    sg_crit3_critical_value_set <- sg_crit3_critical_value
                 }
 
                 # Test for third criterion using adjusted critical value
                 if (identify == "sg") {
-                    crit3 <- mean_pre - mean_post > sg_crit3_critical_value * base::sqrt((((sum_n_pre - 1) * (sd_pre ^ 2)) + ((sum_n_post - 1) * (sd_post ^ 2))) / (sum_n_pre + sum_n_post - 2))
+                    crit3 <- mean_pre - mean_post > sg_crit3_critical_value_set * base::sqrt((((sum_n_pre - 1) * (sd_pre ^ 2)) + ((sum_n_post - 1) * (sd_post ^ 2))) / (sum_n_pre + sum_n_post - 2))
 
                 } else if (identify == "sl") {
-                    crit3 <- mean_post - mean_pre > sg_crit3_critical_value * base::sqrt((((sum_n_pre - 1) * (sd_pre ^ 2)) + ((sum_n_post - 1) * (sd_post ^ 2))) / (sum_n_pre + sum_n_post - 2))
+                    crit3 <- mean_post - mean_pre > sg_crit3_critical_value_set * base::sqrt((((sum_n_pre - 1) * (sd_pre ^ 2)) + ((sum_n_post - 1) * (sd_post ^ 2))) / (sum_n_pre + sum_n_post - 2))
                 }
 
                 # Add missing value if less than two pregain or postgain sessions are available
@@ -158,7 +159,7 @@ check_interval <- function(pre_values, post_values, sg_crit1_cutoff, sg_crit2_pc
                 if (sg_crit3_adjust == TRUE) {
                     message("The critical value for the thrid criterion was adjusted for missingness.")
                 } else if  (sg_crit3_adjust == FALSE) {
-                    message("The critical value for the thrid criterion was not adjusted for missingness, 2.776 was used for all comparisons.")
+                    message(paste0("The critical value for the thrid criterion was not adjusted for missingness, ", sg_crit3_critical_value, " was used for all comparisons."))
                 }
             } else if (base::is.null(sg_crit1_cutoff) == FALSE & base::is.null(sg_crit2_pct) == FALSE & sg_crit3 == FALSE) {
                 crit123 <- crit1 * crit2
@@ -177,7 +178,7 @@ check_interval <- function(pre_values, post_values, sg_crit1_cutoff, sg_crit2_pc
                 if (sg_crit3_adjust == TRUE) {
                     message("The critical value for the thrid criterion was adjusted for missingness.")
                 } else if  (sg_crit3_adjust == FALSE) {
-                    message("The critical value for the thrid criterion was not adjusted for missingness, 2.776 was used for all comparisons.")
+                    message(paste0("The critical value for the thrid criterion was not adjusted for missingness, ", sg_crit3_critical_value, "  was used for all comparisons."))
                 }
             } else if (base::is.null(sg_crit1_cutoff) == FALSE & base::is.null(sg_crit2_pct) == FALSE & sg_crit3 == TRUE) {
                 crit123 <- crit1 * crit2 * crit3
@@ -185,7 +186,7 @@ check_interval <- function(pre_values, post_values, sg_crit1_cutoff, sg_crit2_pc
                 if (sg_crit3_adjust == TRUE) {
                     message("The critical value for the thrid criterion was adjusted for missingness.")
                 } else if  (sg_crit3_adjust == FALSE) {
-                    message("The critical value for the thrid criterion was not adjusted for missingness, 2.776 was used for all comparisons.")
+                    message(paste0("The critical value for the thrid criterion was not adjusted for missingness, ", sg_crit3_critical_value, "  was used for all comparisons."))
                 }
             }
         }
@@ -194,10 +195,10 @@ check_interval <- function(pre_values, post_values, sg_crit1_cutoff, sg_crit2_pc
 
         # Create results object
         results <- paste("# Check ", tolower(identify_string), "\n",
-                         "## Criterion 1: ", crit1, "\n",
-                         "## Criterion 2: ", crit2, "\n",
-                         "## Criterion 3: ", crit3, "\n",
-                         "## ", identify_string, ": ", as.logical(crit123),
+                         "## Met Criterion 1: ", ifelse(crit1 == TRUE, "YES", "NO"), "\n",
+                         "## Met Criterion 2: ", ifelse(crit2 == TRUE, "YES", "NO"), "\n",
+                         "## Met Criterion 3: ", ifelse(crit3 == TRUE, "YES", "NO"), "\n",
+                         "## ", identify_string, ": ", ifelse(as.logical(crit123) == TRUE, "YES", "NO"),
                          sep = "")
 
     } else if (details == TRUE)
@@ -208,23 +209,22 @@ check_interval <- function(pre_values, post_values, sg_crit1_cutoff, sg_crit2_pc
 
         # Create results object
         results <- paste("# Check ", tolower(identify_string), "\n",
-                         "## Criterion 1: ", crit1, "\n",
-                         "## Criterion 2: ", crit2, "\n",
-                         "## Criterion 3: ", crit3, "\n",
-                         "## ", identify_string, ": ", as.logical(crit123), "\n", "\n",
+                         "## Met Criterion 1: ", ifelse(crit1 == TRUE, "YES", "NO"), "\n",
+                         "## Met Criterion 2: ", ifelse(crit2 == TRUE, "YES", "NO"), "\n",
+                         "## Met Criterion 3: ", ifelse(crit3 == TRUE, "YES", "NO"), "\n",
+                         "## ", identify_string, ": ", ifelse(as.logical(crit123) == TRUE, "YES", "NO"), "\n", "\n",
 
                         "# Detailed output\n",
-                        "## Criterion 1, Cut-off: ", sg_crit1_cutoff, "\n",
-                        "## Criterion 2, Percentage change threshhold: ", sg_crit2_pct, "\n",
-                        "## Criterion 3, Alpha: ", sg_crit3_alpha, "\n",
-                        "## Criterion 3, Critical value: ", round(sg_crit3_critical_value, 3), "\n",
+                        "## Criterion 1: Cut-off: ", sg_crit1_cutoff, "\n",
+                        "## Criterion 2: Percentage change threshhold: ", sg_crit2_pct * 100, "%\n",
+                        "## Criterion 3: Adjusted: ", ifelse(sg_crit3_adjust == TRUE, "YES", "NO") , ", Critical value: ", round(sg_crit3_critical_value_set, 3), "\n",
 
                         "## Number of pre gain values present: ", sum_n_pre, "\n",
                         "## Number of post gain values present: ", sum_n_post, "\n",
-                        "## Mean pre: ", round(mean_pre, 3), "\n",
-                        "## Mean post: ", round(mean_post, 3), "\n",
-                        "## SD pre: ", round(sd_pre, 3), "\n",
-                        "## SD post: ", round(sd_post, 3),
+                        "## Mean of pre gain values: ", round(mean_pre, 3), "\n",
+                        "## Mean of post gain values: ", round(mean_post, 3), "\n",
+                        "## SD of pre gain values: ", round(sd_pre, 3), "\n",
+                        "## SD of post gain values: ", round(sd_post, 3),
 
                          sep = "")
 

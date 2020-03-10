@@ -14,21 +14,31 @@ status](https://ci.appveyor.com/api/projects/status/v4lkpg630byy06wn?svg=true)](
 [![](https://cranlogs.r-pkg.org/badges/grand-total/suddengains)](https://cran.r-project.org/package=suddengains)
 <!-- badges: end -->
 
-Identify sudden gains based on the criteria outlined by Tang and
-DeRubeis ([1999](https://doi.org/10.1037/0022-006X.67.6.894)). It
-applies all three criteria to a dataset while adjusting for missing
-values. It calculates further variables that are of interest. It handles
-multiple gains by creating two datasets, one structured by sudden gain
-and one by participant. It also implements a function to specify which
-sudden gains to choose in case of multiple gains (e.g. the earliest or
-largest gain).
+Sudden gains are large and stable improvements in an outcome variable
+between consecutive measurements, for example during a psychological
+intervention with multiple assessments (Tang and DeRubeis,
+[1999](https://doi.org/10.1037/0022-006X.67.6.894)). The R package
+`suddengains` provides a set of tools to facilitate sudden gains
+research. It identifies sudden gains or sudden losses while allowing to
+apply adaptations of the standard criteria. It handles multiple gains by
+creating two datasets, one structured by sudden gains and one by
+participants. It also implements a function to specify which sudden
+gains to choose in case of multiple gains (e.g. the earliest or largest
+gain).
 
-To learn more about the background of this package see our preprint on
-[PsyArXiv](https://psyarxiv.com/2wa84/). We have also created an open
-[Zotero group](https://www.zotero.org/groups/2280342/suddengains)
-collecting all the literature looking at sudden gains in psychological
-therapies. Please let me know if I missed anything or join the group and
-add papers yourself.
+An interactive web application
+**[`shinygains`](https://milanwiedemann.shinyapps.io/shinygains)**
+illustrates the main functions of this package and allows users to
+explore and understand the impact of different methodological choices.
+
+To learn more about the background of this package see our paper in
+[PLOS
+ONE](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0230276).
+We have also created an open [Zotero
+group](https://www.zotero.org/groups/2280342/suddengains) collecting all
+the literature looking at sudden gains in psychological therapies.
+Please let me know if I missed anything or join the group and add papers
+yourself.
 
 ## Installation
 
@@ -103,12 +113,14 @@ A detailed illustration of all functions can be found in the vignette on
 [CRAN](https://CRAN.R-project.org/package=suddengains). Note that the
 vignette is only available in R when you install the package from CRAN.
 
-## Eamples
+## Examples
 
 Below are some examples illustrating the suddengains package. More
 details can be found in the
 [Vignette](https://CRAN.R-project.org/package=suddengains/vignettes/suddengains-tutorial.html)
-or on [PsyArXiv](https://psyarxiv.com/2wa84/).
+or in our [PLOS
+ONE](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0230276)
+paper.
 
 ### 1\. Functions to identify sudden gains
 
@@ -158,7 +170,8 @@ bysg <- create_bysg(data = sgdata,
                     sg_measure_name = "bdi",
                     identify = "sg")
 #> First, second, and third sudden gains criteria were applied.
-#> The critical value for the thrid criterion was adjusted for missingness.
+#> The critical value for the third criterion was adjusted for missingness.
+#> Note: The vector specified in 'extract_var_list' must have the same number of repeated time points as the measure used to identify sudden gains.
 ```
 
 ### 3\. Helper functions to visualise and report sudden gains
@@ -179,15 +192,22 @@ plot_sg(data = bysg,
                                  "sg_bdi_n1", "sg_bdi_n2", "sg_bdi_n3"),
         ylab = "BDI", xlab = "Session",
         colour_single = "#239b89ff")
-#> Warning: Removed 31 rows containing non-finite values (stat_summary).
+#> Warning: `fun.y` is deprecated. Use `fun` instead.
 
-#> Warning: Removed 31 rows containing non-finite values (stat_summary).
-#> Warning: Removed 16 rows containing non-finite values (stat_summary).
+#> Warning: `fun.y` is deprecated. Use `fun` instead.
+
+#> Warning: `fun.y` is deprecated. Use `fun` instead.
+
+#> Warning: `fun.y` is deprecated. Use `fun` instead.
+#> Warning: Removed 27 rows containing non-finite values (stat_summary).
+
+#> Warning: Removed 27 rows containing non-finite values (stat_summary).
+#> Warning: Removed 14 rows containing non-finite values (stat_summary).
+#> Warning: Removed 8 rows containing non-finite values (stat_summary).
 #> Warning: Removed 10 rows containing non-finite values (stat_summary).
-#> Warning: Removed 11 rows containing non-finite values (stat_summary).
 ```
 
-<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-1.png" width="50%" />
 
 ``` r
 # Visualise trajectories for a selection of individual cases
@@ -211,11 +231,11 @@ plot_sg_trajectories(data = sgdata,
                      apaish = TRUE,
                      xlab = "Session", 
                      ylab = "BDI")
-#> Warning: Removed 2 rows containing missing values (geom_point).
-#> Warning: Removed 2 rows containing missing values (geom_label_repel).
+#> Warning: Removed 3 rows containing missing values (geom_point).
+#> Warning: Removed 3 rows containing missing values (geom_label_repel).
 ```
 
-<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="80%" />
 
 ### 4\. Helper functions to export data sets to SPSS, Excel, Stata, and CSV
 

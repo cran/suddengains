@@ -4,17 +4,28 @@
 \alias{create_bysg}
 \title{Create a data set with one row for each sudden gain/loss}
 \usage{
-create_bysg(data, sg_crit1_cutoff, id_var_name, sg_var_list,
-  tx_start_var_name, tx_end_var_name, sg_measure_name,
-  sg_crit2_pct = 0.25, sg_crit3 = TRUE, sg_crit3_alpha = 0.05,
-  sg_crit3_adjust = TRUE, identify = c("sg", "sl"),
-  identify_sg_1to2 = FALSE)
+create_bysg(
+  data,
+  sg_crit1_cutoff,
+  id_var_name,
+  sg_var_list,
+  tx_start_var_name,
+  tx_end_var_name,
+  sg_measure_name,
+  sg_crit2_pct = 0.25,
+  sg_crit3 = TRUE,
+  sg_crit3_alpha = 0.05,
+  sg_crit3_adjust = TRUE,
+  sg_crit3_critical_value = 2.776,
+  identify = c("sg", "sl"),
+  identify_sg_1to2 = FALSE
+)
 }
 \arguments{
 \item{data}{A data set in wide format including an ID variable and variables for each measurement point.}
 
 \item{sg_crit1_cutoff}{Numeric, specifying the cut-off value to be used for the first sudden gains criterion.
-The function \code{\link{define_crit1_cutoff}} can be used to calcualate a cutoff value based on the Reliable Change Index (RCI; Jacobson & Truax, 1991).
+The function \code{\link{define_crit1_cutoff}} can be used to calculate a cutoff value based on the Reliable Change Index (RCI; Jacobson & Truax, 1991).
 If set to \code{NULL} the first criterion wont be applied.}
 
 \item{id_var_name}{String, specifying the name of the ID variable.}
@@ -41,7 +52,9 @@ This argument is set to \code{TRUE} by default adjusting the critical value for 
 A critical value of 2.776 is used when all three data points before and after a potential gain are available,
 where one datapoint is missing either before or after a potential gain a critical value of 3.182 is used,
 and where one datapoint is missing both before and after the gain a critical value of 4.303 is used (for sg_crit3_alpha = 0.05).
-If set to \code{FALSE} a critical value of 2.776 will instead be used for all comparisons, regardless of missingnes in the sequence of data points that are investigated for potential sudden gains.}
+If set to \code{FALSE} the critical value set in \code{sg_crit3_critical_value} will instead be used for all comparisons, regardless of missingnes in the sequence of data points that are investigated for potential sudden gains.}
+
+\item{sg_crit3_critical_value}{Numeric, specifying the critical value to instead be used for all comparisons, regardless of missingnes in the sequence of data points that are investigated for potential sudden gains.#'}
 
 \item{identify}{String, specifying whether to identify sudden gains (\code{"sg"}) using \code{\link{identify_sg}} or sudden losses (\code{"sl"}) using \code{\link{identify_sl}}.
 The default is to identify sudden gains (\code{"sg"}).}

@@ -1,10 +1,10 @@
-## ----setup, include = FALSE----------------------------------------------
+## ----setup, include = FALSE---------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 
-## ----packages, include = FALSE-------------------------------------------
+## ----packages, include = FALSE------------------------------------------------
 # Load packages
 library(suddengains)
 library(dplyr)
@@ -12,10 +12,10 @@ library(ggplot2)
 library(knitr)
 library(DT)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 citation("suddengains")
 
-## ----data-bdi, echo = FALSE, screenshot.force = FALSE--------------------
+## ----data-bdi, echo = FALSE, screenshot.force = FALSE-------------------------
 
 sgdata_bdi <- sgdata %>% 
     dplyr::select(id, 
@@ -30,7 +30,7 @@ DT::datatable(sgdata_bdi,
                              scrollX = TRUE,
                              fixedColumns = TRUE))
 
-## ----data-rq, echo = FALSE, screenshot.force = FALSE---------------------
+## ----data-rq, echo = FALSE, screenshot.force = FALSE--------------------------
 
 sgdata_rq <- sgdata %>% 
     dplyr::select(id, 
@@ -44,7 +44,7 @@ DT::datatable(sgdata_rq,
                              scrollX = TRUE,
                              fixedColumns = TRUE))
 
-## ----select, eval = FALSE------------------------------------------------
+## ----select, eval = FALSE-----------------------------------------------------
 #  # 1. method = "pattern"
 #  select_cases(data = sgdata,
 #               id_var_name = "id",
@@ -64,7 +64,7 @@ DT::datatable(sgdata_rq,
 #               min_sess_num = 9,
 #               return_id_lgl = TRUE)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 sgdata_select <- select_cases(data = sgdata,
                               id_var_name = "id",
                               sg_var_list = c("bdi_s1", "bdi_s2", "bdi_s3", "bdi_s4", 
@@ -74,7 +74,7 @@ sgdata_select <- select_cases(data = sgdata,
                               return_id_lgl = FALSE) %>% 
                  dplyr::filter(sg_select == TRUE)
 
-## ---- eval=FALSE---------------------------------------------------------
+## ---- eval=FALSE--------------------------------------------------------------
 #  # Define cut-off value for first SG criterion
 #  # The sd and the reliability are specified manually
 #  define_crit1_cutoff(sd = 10.5,
@@ -85,7 +85,7 @@ sgdata_select <- select_cases(data = sgdata,
 #  define_crit1_cutoff(data_sd = sgdata$bdi_s0,
 #                      reliability = 0.931)
 
-## ---- eval = FALSE-------------------------------------------------------
+## ---- eval = FALSE------------------------------------------------------------
 #  identify_sg(data = sgdata,
 #              sg_crit1_cutoff = 7,
 #              sg_crit2_pct = 0.25,
@@ -96,7 +96,7 @@ sgdata_select <- select_cases(data = sgdata,
 #                              "bdi_s9", "bdi_s10", "bdi_s11", "bdi_s12"),
 #              identify_sg_1to2 = FALSE)
 
-## ---- eval = FALSE-------------------------------------------------------
+## ---- eval = FALSE------------------------------------------------------------
 #  identify_sg(data = sgdata,
 #              sg_crit1_cutoff = 7,
 #              sg_crit2_pct = 0.25,
@@ -108,7 +108,7 @@ sgdata_select <- select_cases(data = sgdata,
 #              identify_sg_1to2 = FALSE,
 #              crit123_details = TRUE)
 
-## ---- eval = FALSE-------------------------------------------------------
+## ---- eval = FALSE------------------------------------------------------------
 #  identify_sg(data = sgdata,
 #              sg_crit1_cutoff = 7,
 #              sg_crit2_pct = 0.25,
@@ -120,7 +120,7 @@ sgdata_select <- select_cases(data = sgdata,
 #                              "bdi_s9", "bdi_s10", "bdi_s11", "bdi_s12"),
 #              identify_sg_1to2 = TRUE)
 
-## ---- eval = FALSE-------------------------------------------------------
+## ---- eval = FALSE------------------------------------------------------------
 #  identify_sl(data = sgdata,
 #              sg_crit1_cutoff = -7,
 #              sg_crit2_pct = 0.25,
@@ -131,7 +131,7 @@ sgdata_select <- select_cases(data = sgdata,
 #                              "bdi_s9", "bdi_s10", "bdi_s11", "bdi_s12"),
 #              identify_sg_1to2 = FALSE)
 
-## ---- eval = FALSE-------------------------------------------------------
+## ---- eval = FALSE------------------------------------------------------------
 #  # This example only uses the first and second sudden gains criteria
 #  # All following examples work the same for the "identify_sl()" function
 #  # The argument "crit123_details = TRUE" returns details about each between session interval for each criterion.
@@ -198,7 +198,7 @@ sgdata_select <- select_cases(data = sgdata,
 #              identify_sg_1to2 = FALSE,
 #              crit123_details = TRUE)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 # Check interval for sudden gain using all 3 criteria
 # No missing data, alpha = 0.05
 check_interval(pre_values = c(32, 31, 33),
@@ -239,7 +239,7 @@ check_interval(pre_values = c(5, NA, 7),
                sg_crit3_alpha = .05,
                identify = "sl")
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 bysg <- create_bysg(data = sgdata,
                     sg_crit1_cutoff = 7,
                     id_var_name = "id",
@@ -251,7 +251,7 @@ bysg <- create_bysg(data = sgdata,
                     sg_measure_name = "bdi",
                     identify = "sg")
 
-## ---- echo = FALSE, screenshot.force = FALSE-----------------------------
+## ---- echo = FALSE, screenshot.force = FALSE----------------------------------
 DT::datatable(bysg,
               rownames = FALSE,
               extensions = 'FixedColumns',
@@ -260,7 +260,7 @@ DT::datatable(bysg,
                   scrollX = TRUE,
                   fixedColumns = TRUE))
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 bysl <- create_bysg(data = sgdata,
                     sg_crit1_cutoff = -7,
                     id_var_name = "id",
@@ -272,7 +272,7 @@ bysl <- create_bysg(data = sgdata,
                     sg_measure_name = "bdi",
                     identify = "sl")
 
-## ---- echo = FALSE, screenshot.force = FALSE-----------------------------
+## ---- echo = FALSE, screenshot.force = FALSE----------------------------------
 DT::datatable(bysl,
               rownames = FALSE,
               extensions = 'FixedColumns',
@@ -281,7 +281,7 @@ DT::datatable(bysl,
                   scrollX = TRUE,
                   fixedColumns = TRUE))
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 byperson_first <- create_byperson(data = sgdata,
                                   sg_crit1_cutoff = 7,
                                   id_var_name = "id",
@@ -294,7 +294,7 @@ byperson_first <- create_byperson(data = sgdata,
                                   identify_sg_1to2 = FALSE,
                                   multiple_sg_select = "first")
 
-## ---- echo = FALSE-------------------------------------------------------
+## ---- echo = FALSE------------------------------------------------------------
 datatable(byperson_first,
           rownames = FALSE,
           extensions = 'FixedColumns',
@@ -303,7 +303,7 @@ datatable(byperson_first,
               scrollX = TRUE,
               fixedColumns = TRUE))
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 byperson_largest <- create_byperson(data = sgdata,
                                     sg_crit1_cutoff = 7,
                                     id_var_name = "id",
@@ -316,7 +316,7 @@ byperson_largest <- create_byperson(data = sgdata,
                                     identify_sg_1to2 = FALSE,
                                     multiple_sg_select = "largest")
 
-## ---- echo = FALSE, screenshot.force = FALSE-----------------------------
+## ---- echo = FALSE, screenshot.force = FALSE----------------------------------
 DT::datatable(byperson_largest,
           rownames = FALSE,
           extensions = 'FixedColumns',
@@ -325,7 +325,7 @@ DT::datatable(byperson_largest,
               scrollX = TRUE,
               fixedColumns = TRUE))
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 # For bysg dataset select "id" and "rq" variables first
 sgdata_rq <- sgdata %>% 
     dplyr::select(id, rq_s0:rq_s12)
@@ -343,7 +343,7 @@ bysg_rq <- extract_values(data = bysg_rq,
                           extract_measure_name = "rq",
                           add_to_data = TRUE)
 
-## ---- echo = FALSE-------------------------------------------------------
+## ---- echo = FALSE------------------------------------------------------------
 datatable(bysg_rq,
           rownames = FALSE,
           extensions = 'FixedColumns',
@@ -352,7 +352,7 @@ datatable(bysg_rq,
               scrollX = TRUE,
               fixedColumns = TRUE))
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 # Create plot of average change in depression symptoms (BDI) around the gain
 plot_sg_bdi <- plot_sg(data = bysg,
                        id_var_name = "id",
@@ -384,11 +384,11 @@ plot_sg_rq <- plot_sg_rq +
               ggplot2::scale_x_discrete(labels = c("First", "n-2", "n-1", "n",
                                                    "n+1", "n+2", "n+3", "Last"))
 
-## ---- fig.show = 'hold', fig.width=3.2, fig.height=3.2-------------------
+## ---- fig.show = 'hold', fig.width=3.2, fig.height=3.2------------------------
 plot_sg_bdi
 plot_sg_rq 
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 # Set seed
 set.seed(123)
 
@@ -423,7 +423,7 @@ byperson_group_select <- select_cases(data = byperson_group,
                               return_id_lgl = FALSE) %>% 
                  dplyr::filter(sg_select == TRUE)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 plot_byperson_group <- plot_sg(data = byperson_group_select,
                                id_var_name = "id",
                                tx_start_var_name = "bdi_s1",
@@ -441,10 +441,10 @@ plot_byperson_group <- plot_sg(data = byperson_group_select,
                                apaish = TRUE,
                                ylab = "BDI", xlab = "Session")
 
-## ---- fig.show = 'hold', fig.width=5.5, fig.height=4---------------------
+## ---- fig.show = 'hold', fig.width=4.4, fig.height=3.2------------------------
 plot_byperson_group
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 plot_trajectories_1 <- sgdata %>%
     plot_sg_trajectories(id_var = "id",
                          select_id_list = c("2", "4", "5", "9"),
@@ -466,10 +466,10 @@ plot_trajectories_1 <- sgdata %>%
                          xlab = "Session", 
                          ylab = "BDI")
 
-## ---- fig.show = 'hold', fig.width=5.5, fig.height=4---------------------
+## ---- fig.show = 'hold', fig.width=5.5, fig.height=4--------------------------
 plot_trajectories_1
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 # 1. Create plot including all cases with a sudden gain at session 3
 plot_trajectories_2 <- bysg %>%
     dplyr::filter(sg_session_n == 3) %>% 
@@ -492,11 +492,11 @@ plot_trajectories_2 <- bysg %>%
                          xlab = "Session", 
                          ylab = "BDI")
 
-## ---- fig.show = 'hold', fig.width=5.5, fig.height=4---------------------
+## ---- fig.show = 'hold', fig.width=6.5, fig.height=4--------------------------
 # 1. Show all cases with a sudden gain at session 3
 plot_trajectories_2
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 # 2. Create plot including 3 randomly selected (select_n = 3) cases who experienced 
 #    more than 1 gain (dplyr::filter(sg_freq_byperson > 1))
 plot_trajectories_3 <- byperson_first %>%
@@ -521,11 +521,11 @@ plot_trajectories_3 <- byperson_first %>%
                          xlab = "Session", 
                          ylab = "BDI")
 
-## ---- fig.show = 'hold', fig.width=5.5, fig.height=4---------------------
+## ---- fig.show = 'hold', fig.width=6.5, fig.height=4--------------------------
 # 2. Show 3 cases (select_n = 3) with more than 1 gain (dplyr::filter(sg_freq_byperson > 1))
 plot_trajectories_3
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 count_intervals(data = sgdata_select,
                 id_var_name = "id",
                 sg_var_list = c("bdi_s1", "bdi_s2", "bdi_s3", "bdi_s4",
@@ -533,7 +533,7 @@ count_intervals(data = sgdata_select,
                                 "bdi_s9", "bdi_s10", "bdi_s11", "bdi_s12"),
                 identify_sg_1to2 = FALSE)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 # Describe bysg dataset ----
 describe_sg(data = bysg, 
             sg_data_structure = "bysg")
