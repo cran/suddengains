@@ -1,3 +1,8 @@
+# suddengains 0.4.3
+- supress messages in `create_bysg()` and create_byperson that come from `extract_values()` function
+- update ggplot2 function with deprecated warning message 
+- clearer detailed output message in `check_interval()` function
+
 # suddengains 0.4.2
 
 - Add option to specify the critical value for criterion three using the argument `sg_crit3_critical_value`
