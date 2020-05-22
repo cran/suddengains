@@ -533,6 +533,13 @@ count_intervals(data = sgdata_select,
                                 "bdi_s9", "bdi_s10", "bdi_s11", "bdi_s12"),
                 identify_sg_1to2 = FALSE)
 
+## ---- fig.show = 'hold', fig.width=6.5, fig.height=6--------------------------
+plot_sg_intervals(data = sgdata_select,
+                  id_var_name = "id",
+                  sg_var_list = c("bdi_s1", "bdi_s2", "bdi_s3", "bdi_s4",
+                                  "bdi_s5", "bdi_s6", "bdi_s7", "bdi_s8",
+                                  "bdi_s9", "bdi_s10", "bdi_s11", "bdi_s12"))
+
 ## -----------------------------------------------------------------------------
 # Describe bysg dataset ----
 describe_sg(data = bysg, 

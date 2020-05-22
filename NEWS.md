@@ -1,7 +1,11 @@
+# suddengains 0.4.4
+- add function `plot_sg_intervals()` to visualise session to session intervals that are analysed for sudden gains 
+- minor changes to integrate updates in tibble package
+
 # suddengains 0.4.3
-- supress messages in `create_bysg()` and create_byperson that come from `extract_values()` function
-- update ggplot2 function with deprecated warning message 
-- clearer detailed output message in `check_interval()` function
+- Suppress message about vector length from `extract_values()` in the functions `create_bysg()` and `create_byperson()`
+- Update ggplot2 functions with "deprecated" warning message 
+- Add clearer detailed output message in `check_interval()` function
 
 # suddengains 0.4.2
 

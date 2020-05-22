@@ -73,7 +73,7 @@ create_bysg <- function(data, sg_crit1_cutoff, id_var_name, sg_var_list, tx_star
 
     # Stop if no sudden gains were identified and return error
     if (sg_sum == 0) {
-      stop("No sudden gains were identified.", call. = FALSE)
+      warning("No sudden gains were identified.", call. = FALSE)
     }
 
   } else if (identify == "sl") {
@@ -97,7 +97,7 @@ create_bysg <- function(data, sg_crit1_cutoff, id_var_name, sg_var_list, tx_star
 
     # Stop if no sudden losses were identified and return error
     if (sg_sum == 0) {
-      stop("No sudden losses were identified.", call. = FALSE)
+      warning("No sudden losses were identified.", call. = FALSE)
     }
   }
 
@@ -237,6 +237,6 @@ create_bysg <- function(data, sg_crit1_cutoff, id_var_name, sg_var_list, tx_star
 
   # Return tibble
   data_bysg %>%
-    tibble::as.tibble() %>%
+    tibble::as_tibble() %>%
     dplyr::arrange(!! rlang::sym(id_var_name))
 }
