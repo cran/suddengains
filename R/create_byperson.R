@@ -19,7 +19,7 @@
 #' A critical value of 2.776 is used when all three data points before and after a potential gain are available,
 #' where one datapoint is missing either before or after a potential gain a critical value of 3.182 is used,
 #' and where one datapoint is missing both before and after the gain a critical value of 4.303 is used (for sg_crit3_alpha = 0.05).
-#' If set to \code{FALSE} the critical value setin \code{sg_crit3_critical_value} will instead be used for all comparisons, regardless of missingnes in the sequence of data points that are investigated for potential sudden gains.
+#' If set to \code{FALSE} the critical value specified in \code{sg_crit3_critical_value} will instead be used for all comparisons, regardless of missingnes in the sequence of data points that are investigated for potential sudden gains.
 #' @param sg_crit3_critical_value Numeric, specifying the critical value to instead be used for all comparisons, regardless of missingnes in the sequence of data points that are investigated for potential sudden gains.
 #' @param id_var_name String, specifying the name of the ID variable.
 #' @param sg_var_list Vector, specifying the variable names of each measurement point sequentially.
@@ -35,7 +35,7 @@
 #' The default is to select the first sudden gain (\code{"first"}) if someone experienced multiple gains.
 #' @param data_is_bysg Logical, specifying whether the data set in the \code{data} argument is a bysg datasets created using the \code{\link{create_bysg}} function.
 #' @return  A wide data set with one row per case (\code{id_var_name}) in \code{data}.
-#' @references Tang, T. Z., & DeRubeis, R. J. (1999). Sudden gains and critical sessions in cognitive-behavioral therapy for depression. Journal of Consulting and Clinical Psychology, 67(6), 894–904. \url{https://doi.org/10.1037/0022-006X.67.6.894}.
+#' @references Tang, T. Z., & DeRubeis, R. J. (1999). Sudden gains and critical sessions in cognitive-behavioral therapy for depression. Journal of Consulting and Clinical Psychology, 67(6), 894–904.<doi:10.1037/0022-006X.67.6.894>.
 #' @export
 #' @examples # Create byperson data set, selecting the largest gain in case of muliple gains
 #' create_byperson(data = sgdata,
@@ -61,7 +61,7 @@ create_byperson <- function(data, sg_crit1_cutoff, id_var_name, sg_var_list, tx_
   # to create the byperson dataset
   if (data_is_bysg == FALSE) {
     data_bysg <- create_bysg(data = data,
-                             id_var_name = id_var_name,
+                             id_var_name = dplyr::all_of(id_var_name),
                              sg_var_list = sg_var_list,
                              sg_crit1_cutoff = sg_crit1_cutoff,
                              sg_crit2_pct = sg_crit2_pct,
@@ -84,7 +84,7 @@ create_byperson <- function(data, sg_crit1_cutoff, id_var_name, sg_var_list, tx_
     base::message("The first gain/loss was selected in case of multiple gains/losses.")
 
     bysg_data_select <- data_bysg %>%
-      dplyr::select(id_var_name, id_sg, dplyr::starts_with("sg_")) %>%
+      dplyr::select(dplyr::all_of(id_var_name), id_sg, dplyr::starts_with("sg_")) %>%
       dplyr::group_by(!! rlang::sym(id_var_name)) %>%
       dplyr::filter(sg_session_n == base::min(sg_session_n)) %>%
       dplyr::ungroup()
@@ -94,7 +94,7 @@ create_byperson <- function(data, sg_crit1_cutoff, id_var_name, sg_var_list, tx_
     base::message("The last gain/loss was selected in case of multiple gains/losses.")
 
     bysg_data_select <- data_bysg %>%
-      dplyr::select(id_var_name, id_sg, dplyr::starts_with("sg_")) %>%
+      dplyr::select(dplyr::all_of(id_var_name), id_sg, dplyr::starts_with("sg_")) %>%
       dplyr::group_by(!! rlang::sym(id_var_name)) %>%
       dplyr::filter(sg_session_n == base::max(sg_session_n)) %>%
       dplyr::ungroup()
@@ -104,7 +104,7 @@ create_byperson <- function(data, sg_crit1_cutoff, id_var_name, sg_var_list, tx_
     base::message("The smallest gain/loss was selected in case of multiple gains/losses.")
 
     bysg_data_select <- data_bysg %>%
-      dplyr::select(id_var_name, id_sg, dplyr::starts_with("sg_")) %>%
+      dplyr::select(dplyr::all_of(id_var_name), id_sg, dplyr::starts_with("sg_")) %>%
       dplyr::group_by(!! rlang::sym(id_var_name)) %>%
       dplyr::filter(sg_magnitude == base::min(sg_magnitude)) %>%
       dplyr::filter(sg_session_n == base::min(sg_session_n)) %>%
@@ -115,7 +115,7 @@ create_byperson <- function(data, sg_crit1_cutoff, id_var_name, sg_var_list, tx_
     base::message("The largest gain/loss was selected in case of multiple gains/losses.")
 
     bysg_data_select <- data_bysg %>%
-      dplyr::select(id_var_name, id_sg, dplyr::starts_with("sg_")) %>%
+      dplyr::select(dplyr::all_of(id_var_name), id_sg, dplyr::starts_with("sg_")) %>%
       dplyr::group_by(!! rlang::sym(id_var_name)) %>%
       dplyr::filter(sg_magnitude == base::max(sg_magnitude)) %>%
       dplyr::filter(sg_session_n == base::min(sg_session_n)) %>%

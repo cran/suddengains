@@ -63,7 +63,7 @@ This argument is set to \code{TRUE} by default adjusting the critical value for 
 A critical value of 2.776 is used when all three data points before and after a potential gain are available,
 where one datapoint is missing either before or after a potential gain a critical value of 3.182 is used,
 and where one datapoint is missing both before and after the gain a critical value of 4.303 is used (for sg_crit3_alpha = 0.05).
-If set to \code{FALSE} the critical value setin \code{sg_crit3_critical_value} will instead be used for all comparisons, regardless of missingnes in the sequence of data points that are investigated for potential sudden gains.}
+If set to \code{FALSE} the critical value specified in \code{sg_crit3_critical_value} will instead be used for all comparisons, regardless of missingnes in the sequence of data points that are investigated for potential sudden gains.}
 
 \item{sg_crit3_critical_value}{Numeric, specifying the critical value to instead be used for all comparisons, regardless of missingnes in the sequence of data points that are investigated for potential sudden gains.}
 
@@ -94,5 +94,5 @@ create_byperson(data = sgdata,
                 multiple_sg_select = "largest")
 }
 \references{
-Tang, T. Z., & DeRubeis, R. J. (1999). Sudden gains and critical sessions in cognitive-behavioral therapy for depression. Journal of Consulting and Clinical Psychology, 67(6), 894–904. \url{https://doi.org/10.1037/0022-006X.67.6.894}.
+Tang, T. Z., & DeRubeis, R. J. (1999). Sudden gains and critical sessions in cognitive-behavioral therapy for depression. Journal of Consulting and Clinical Psychology, 67(6), 894–904.<doi:10.1037/0022-006X.67.6.894>.
 }

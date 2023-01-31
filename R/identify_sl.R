@@ -6,7 +6,7 @@
 #' @param id_var_name String, specifying the name of the ID variable. Each row should have a unique value.
 #' @param sg_var_list Vector, specifying the variable names of each measurement point sequentially.
 #' @param sg_crit1_cutoff Numeric, specifying the negative cut-off value to be used for the first sudden losses criterion, see examples below.
-#' The function \code{\link{define_crit1_cutoff}} can be used to calcualate a cutoff value based on the Reliable Change Index (RCI; Jacobson & Truax, 1991).
+#' The function \code{\link{define_crit1_cutoff}} can be used to calculate a cutoff value based on the Reliable Change Index (RCI; Jacobson & Truax, 1991).
 #' If set to \code{NULL} the first criterion wont be applied.
 #' @param sg_crit2_pct Numeric, specifying the percentage change to be used for the second sudden losses criterion.
 #' If set to \code{NULL} the first criterion wont be applied.
@@ -17,8 +17,8 @@
 #' @param sg_crit3_adjust Logical, specify whether critical value gets adjusted for missingness, see Lutz et al. (2013) and the documentation of this R package for further details.
 #' This argument is set to \code{TRUE} by default adjusting the critical value for missingness as described in the package documentation and Lutz et al. (2013):
 #' A critical value of 2.776 is used when all three data points before and after a potential gain are available,
-#' where one datapoint is missing either before or after a potential gain a critical value of 3.182 is used,
-#' and where one datapoint is missing both before and after the gain a critical value of 4.303 is used (for sg_crit3_alpha = 0.05).
+#' where one data point is missing either before or after a potential gain a critical value of 3.182 is used,
+#' and where one data point is missing both before and after the gain a critical value of 4.303 is used (for sg_crit3_alpha = 0.05).
 #' If set to \code{FALSE} the critical value set in \code{sg_crit3_critical_value} will instead be used for all comparisons, regardless of missingnes in the sequence of data points that are investigated for potential sudden gains.
 #' @param sg_crit3_critical_value Numeric, if  the argument \code{sg_crit3_adjust = FALSE}, specifying the critical value to instead be used for all comparisons, regardless of missingnes in the sequence of data points that are investigated for potential sudden gains.
 #' @param identify_sg_1to2 Logical, indicating whether to identify sudden losses from measurement point 1 to 2.
@@ -26,9 +26,9 @@
 #' @param crit123_details Logical, if set to \code{TRUE} this function returns information about which of the three criteria (e.g. "sg_crit1_2to3", "sg_crit2_2to3", and "sg_crit3_2to3") are met for each session to session interval for all cases.
 #' Variables named "sg_2to3", "sg_3to4" summarise all criteria that were selected to identify sudden gains.
 #' @return A wide data set indicating whether sudden losses are present for each session to session interval for all cases in \code{data}.
-#' @references Lutz, W., Ehrlich, T., Rubel, J., Hallwachs, N., Röttger, M.-A., Jorasz, C., … Tschitsaz-Stucki, A. (2013). The ups and downs of psychotherapy: Sudden gains and sudden losses identified with session reports. Psychotherapy Research, 23(1), 14–24. \url{https://doi.org/10.1080/10503307.2012.693837}.
+#' @references Lutz, W., Ehrlich, T., Rubel, J., Hallwachs, N., Röttger, M.-A., Jorasz, C., … Tschitsaz-Stucki, A. (2013). The ups and downs of psychotherapy: Sudden gains and sudden losses identified with session reports. Psychotherapy Research, 23(1), 14–24. <doi:10.1080/10503307.2012.693837>.
 #'
-#' Tang, T. Z., & DeRubeis, R. J. (1999). Sudden gains and critical sessions in cognitive-behavioral therapy for depression. Journal of Consulting and Clinical Psychology, 67(6), 894–904. \url{https://doi.org/10.1037/0022-006X.67.6.894}.
+#' Tang, T. Z., & DeRubeis, R. J. (1999). Sudden gains and critical sessions in cognitive-behavioral therapy for depression. Journal of Consulting and Clinical Psychology, 67(6), 894–904. <doi:10.1037/0022-006X.67.6.894>.
 #' @examples # Identify sudden losses
 #' identify_sl(data = sgdata,
 #'             # Negative cut-off value to identify sudden losses
@@ -65,7 +65,7 @@ identify_sl <- function(data, id_var_name, sg_var_list, sg_crit1_cutoff, sg_crit
         # Only ID variable and sudden losses variables needed
         data_select <- data %>%
             dplyr::arrange(!!rlang::sym(id_var_name)) %>%
-            dplyr::select(!!rlang::sym(id_var_name), sg_var_list)
+            dplyr::select(!!rlang::sym(id_var_name), dplyr::all_of(sg_var_list))
 
         # Remove ID from dataframe for loop
         data_loop <- data_select %>%
